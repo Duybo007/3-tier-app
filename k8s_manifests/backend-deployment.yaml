@@ -21,23 +21,37 @@ spec:
       labels:
         role: backend
     spec:
+      serviceAccountName: backend-service-account
       containers:
       - name: backend
         image: public.ecr.aws/l0l7e4u1/3-tier-backend:latest
         imagePullPolicy: Always
         env:
-          - name: MONGO_CONN_STR
-            value: mongodb://mongodb-svc:27017/todo?directConnection=true
-          - name: MONGO_USERNAME
+          - name: DB_HOST
             valueFrom:
               secretKeyRef:
-                name: mongo-sec
-                key: username
-          - name: MONGO_PASSWORD
+                name: rds-secret
+                key: DB_HOST
+          - name: DB_PORT
             valueFrom:
               secretKeyRef:
-                name: mongo-sec
-                key: password
+                name: rds-secret
+                key: DB_PORT
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: rds-secret
+                key: DB_NAME
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: rds-secret
+                key: DB_USERNAME
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: rds-secret
+                key: DB_PASSWORD
         ports:
         - containerPort: 8080
         livenessProbe:

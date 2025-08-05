@@ -1,15 +1,25 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const { DataTypes } = require("sequelize");
+const { getSequelize } = require("../db");
 
-const taskSchema = new Schema({
+const sequelize = getSequelize();
+
+const Task = sequelize.define("Task", {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     task: {
-        type: String,
-        required: true,
+        type: DataTypes.STRING,
+        allowNull: false
     },
     completed: {
-        type: Boolean,
-        default: false,
-    },
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    }
+}, {
+    tableName: 'tasks',
+    timestamps: true // Adds createdAt and updatedAt columns
 });
 
-module.exports = mongoose.model("task", taskSchema);
+module.exports = Task;
