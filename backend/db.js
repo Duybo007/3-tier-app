@@ -4,11 +4,16 @@ let sequelize;
 
 module.exports = async () => {
     try {
+        // Validate required environment variables
+        if (!process.env.DB_PASSWORD) {
+            throw new Error("DB_PASSWORD environment variable is required");
+        }
+        
         // Create Sequelize instance
         sequelize = new Sequelize(
             process.env.DB_NAME || 'postgres',
             process.env.DB_USERNAME || 'admin',
-            process.env.DB_PASSWORD || 'password123',
+            process.env.DB_PASSWORD,
             {
                 host: process.env.DB_HOST || 'localhost',
                 port: process.env.DB_PORT || 5432,
